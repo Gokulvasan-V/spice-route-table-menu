@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spice Route · Table Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Hind:wght@400;500;600&family=Noto+Sans+Tamil:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- Top bar -->
+<header class="bar">
+  <div class="logo"><i>S</i>Spice Route</div>
+  <span class="tablepill" id="tablePill" style="display:none"></span>
+  <div class="who" id="who" style="display:none"></div>
+</header>
+
+<!-- 1. WELCOME -->
+<section id="s-welcome" class="screen active">
+  <div class="hero">
+    <div class="eyebrow">Welcome · <span class="ta">வணக்கம்</span></div>
+    <h1>Fire, spice &amp; <em>comfort</em> at your table.</h1>
+    <p class="lead">Tell us a little about you and we'll shape the menu around your taste. Order straight from your seat — your waiter will bring it over.</p>
+    <form class="card form" id="welcomeForm" novalidate>
+      <div class="field" id="f-name"><label for="name">Your name</label>
+        <input id="name" autocomplete="name" placeholder="e.g. Arun Kumar" maxlength="60">
+        <div class="err">Please enter your name.</div></div>
+      <div class="field" id="f-mobile"><label for="mobile">Mobile number</label>
+        <input id="mobile" inputmode="numeric" autocomplete="tel" placeholder="10-digit mobile">
+        <div class="err">Enter a valid 10-digit mobile number.</div></div>
+      <div class="field" id="f-dob"><label for="dob">Date of birth</label>
+        <input id="dob" type="date">
+        <div class="err">Please choose a valid date of birth.</div></div>
+      <div class="field" id="f-table"><label for="table">Table number</label>
+        <select id="table"></select>
+        <div class="err">Choose your table.</div></div>
+      <div class="returning" id="returning"></div>
+      <button class="btn primary full" id="goBtn" type="submit">See the menu →</button>
+      <p class="note">Demo: try 9876543210 to see order-history picks.</p>
+    </form>
+  </div>
+</section>
+
+<!-- 2. MENU -->
+<section id="s-menu" class="screen">
+  <div class="wrap">
+    <div class="banner" id="offline"></div>
+    <div class="birthday" id="bday"></div>
+    <div class="greet"><h2 id="hello"></h2><button class="btn ghost" id="changePref">Change preference</button></div>
+    <div id="suggestions"></div>
+    <div class="filters">
+      <div class="row">
+        <div class="seg scroll" id="segDiet" role="tablist" aria-label="Diet">
+          <button data-v="all" class="on">All</button><button data-v="veg">Veg</button><button data-v="nonveg">Non-Veg</button><button data-v="kids">Kids &amp; Protein</button>
+        </div>
+        <div class="seg scroll cuisine" id="segCuisine" aria-label="Cuisine">
+          <button data-v="all" class="on">All styles</button><button data-v="South Indian">South Indian</button><button data-v="North Indian">North Indian</button>
+        </div>
+      </div>
+      <div class="row">
+        <input class="search" id="search" placeholder="Search dishes…" aria-label="Search dishes">
+        <div class="seg scroll" id="segCat" style="flex:1 1 100%"></div>
+        <span class="count" id="count"></span>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<!-- 3. CART -->
+<section id="s-cart" class="screen">
+  <div class="wrap" style="max-width:640px">
+    <button class="btn ghost" id="backMenu" style="margin-bottom:14px">← Back to menu</button>
+    <div class="card">
+      <h2 style="font-size:30px">Your order</h2>
+      <div id="cartLines"></div>
+      <div class="totalrow"><span>Total</span><span id="cartTotal"></span></div>
+      <div class="nopay">🪑 Order only — no payment here. The bill is settled at the counter after your meal.</div>
+      <button class="btn primary full" id="orderBtn">Order to Waiter</button>
+    </div>
+  </div>
+</section>
+
+<!-- 4. DONE -->
+<section id="s-done" class="screen">
+  <div class="wrap" style="max-width:560px"><div class="card done">
+    <div class="big">🛎️</div>
+    <h2>Order sent!</h2>
+    <p id="doneMsg" style="color:var(--muted)"></p>
+    <div class="wcard" id="wcard"></div>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:16px">Your waiter speaks English &amp; <span class="ta">தமிழ்</span>.</p>
+    <button class="btn primary full" id="again">Order something more</button>
+  </div></div>
+</section>
+
+<!-- Preference popup -->
+<div class="modal" id="prefModal" role="dialog" aria-modal="true" aria-labelledby="pt">
+  <div class="sheet">
+    <h2 id="pt">What are you in the mood for?</h2>
+    <p class="sub">We'll filter the menu to match. You can change this any time.</p>
+    <div class="prefs">
+      <button class="pref" data-p="veg"><span class="dot"></span><b>Veg</b><small>Purely vegetarian dishes</small></button>
+      <button class="pref" data-p="nonveg"><span class="dot nv"></span><b>Non-Veg</b><small>Chicken, mutton, fish &amp; egg</small></button>
+      <button class="pref" data-p="all"><span class="dot all"></span><b>All</b><small>Show me everything</small></button>
+      <button class="pref" data-p="kids"><span class="dot kid"></span><b>Foods for Kids</b><small>Mild &amp; fun, incl. protein-rich</small></button>
+    </div>
+    <div class="agegrp" id="agegrp">
+      <p class="sub" style="margin-bottom:8px">Who's the little one?</p>
+      <div class="chips" id="ageChips"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Support: on EVERY page -->
+<div class="sup-panel" id="supPanel" role="dialog" aria-label="Support">
+  <h4>Need a hand?</h4>
+  <button class="opt" data-k="manager"><span style="font-size:24px">👔</span><span>Call Restaurant Manager<small>For concerns or feedback</small></span></button>
+  <button class="opt" data-k="waiter"><span style="font-size:24px">🧑‍🍳</span><span>Call Restaurant Waiter<small>Water, cutlery, help with the menu</small></span></button>
+</div>
+<button class="sup-fab" id="supFab" aria-expanded="false">📞 Support</button>
+
+<div class="cartbar" id="cartbar">
+  <div><b id="cbCount"></b><small id="cbTotal"></small></div>
+  <button class="btn" id="viewCart">View order →</button>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="fallback.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
